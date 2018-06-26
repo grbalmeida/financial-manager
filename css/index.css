@@ -11,3 +11,19 @@
 [data-saldo] {
 	margin-top: 10px;
 }
+
+td {
+	text-align: center;
+}
+
+tr, td, th {
+	border: 1px solid black;
+}
+
+#vermelho > :nth-child(odd) {
+	background-color: #FF7F50;
+}
+
+#verde > :nth-child(odd) {
+	background-color: #ADFF2F;
+}

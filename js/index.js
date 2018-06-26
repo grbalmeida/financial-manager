@@ -10,6 +10,7 @@
 	const receitas = document.querySelector('[data-receitas]')
 	const despesasReceitas = document.querySelector('#despesas-receitas')
 	const saldo = document.querySelector('[data-saldo]')
+	const body = document.querySelector('body')
 
 	btn.addEventListener('click', previnirAcaoPadrao)
 	btn.addEventListener('click', validarValor)
@@ -21,6 +22,8 @@
 		}
 		previnirTeclasNaoNumericas()
 	})
+
+	body.addEventListener('click', apagarTarefa)
 
 	function previnirAcaoPadrao() {
 		event.preventDefault()
@@ -57,8 +60,8 @@
 	}
 
 	function hidden() {
-		const qtdDespesas = despesas.firstElementChild.firstElementChild.querySelectorAll('tr').length
-		const qtdReceitas = receitas.firstElementChild.firstElementChild.querySelectorAll('tr').length
+		const qtdDespesas = despesas.querySelectorAll('tr').length
+		const qtdReceitas = receitas.querySelectorAll('tr').length
 		if(qtdReceitas > 1 || qtdDespesas > 1) {
 			despesas.classList.remove('desaparecer')
 			receitas.classList.remove('desaparecer')
@@ -66,8 +69,6 @@
 			despesas.classList.add('desaparecer')
 			receitas.classList.add('desaparecer')
 		}
-		console.log(receitas)
-		console.log(despesas)
 	}
 
 	function criarElementos(pai) {
@@ -76,12 +77,19 @@
 		const tdValor = document.createElement('td')
 		const tdValorContent = document.createTextNode(valor.value)
 		const tr = document.createElement('tr')
+		const tdApagar = document.createElement('td')
+		const tdApagarBtn = document.createElement('button')
+		const tdApagarContent = document.createTextNode('Apagar')
 
 		tdDescricao.appendChild(tdDescricaoContent)
 		tdValor.appendChild(tdValorContent)
+		tdApagarBtn.classList.add('apagar')
+		tdApagarBtn.appendChild(tdApagarContent)
+		tdApagar.appendChild(tdApagarBtn)
 
 		tr.appendChild(tdDescricao)
 		tr.appendChild(tdValor)
+		tr.appendChild(tdApagar)
 
 		pai.firstElementChild.firstElementChild.appendChild(tr)
 
@@ -103,17 +111,32 @@
 		const valorTotalDespesas = getValores(despesas)
 		const valorTotalReceitas = getValores(receitas)
 		const saldoAtual = valorTotalReceitas - valorTotalDespesas
-		saldo.textContent = `Saldo atual: R$${saldoAtual.toFixed(2).replace('.', ',')}` 
+		saldo.textContent = `Saldo atual: R$${saldoAtual.toFixed(2).replace('.', ',')}`
 	}
 
 	function getValores(tipoGasto) {
-		const trs = tipoGasto.querySelectorAll('tr')
-		const trsIndiceDiferente0 = Array.from(trs).filter((tr, indice) => indice != 0)
-		const tds = Array.from(trsIndiceDiferente0).map(elemento => elemento.lastElementChild)
-		const valores = Array.from(tds).map(td => Number(td.textContent).toFixed(2))
-		return valores.reduce(function(acumulado, atual) {
-			return acumulado + atual
-		}, 0)
+		const total = Array.from(tipoGasto.querySelectorAll('tr'))
+						.filter((tr, indice) => indice != 0)
+						.map(elemento => elemento.firstElementChild.nextElementSibling)
+						.map(td => Number(td.textContent))
+						.reduce(function(acumulado, atual = 0) {
+							return acumulado + atual
+						}, 0)
+
+		return total
+	}
+
+	function apagarTarefa(event) {
+		const btn = event.target
+		const tr = btn.parentNode.parentNode
+		const pai = tr.parentNode
+
+		if(btn.classList.contains('apagar')) {
+			pai.removeChild(tr)
+			atualizaSaldo()
+			hidden()
+		}
+
 	}
 
 })()
