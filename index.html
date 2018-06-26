@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<title>Gerenciador Financeiro</title>
+	<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+	<form method="POST">
+		<select data-tipo>
+			<option value="despesa">Nova Despesa</option>
+			<option value="receita">Nova Receita</option>
+		</select>
+		<input type="text" data-descricao placeholder="Descrição">
+		<input type="text" data-valor placeholder="Valor">
+		<button data-btn>Adicionar</button>
+	</form>
+	<div id="despesas-receitas">
+		<div data-despesas>
+			<table>
+				<tr>
+					<th>Descrição da despesa</th>
+					<th>Valor da despesa</th>
+				</tr>
+			</table>
+		</div>
+		<div data-receitas>
+			<table>
+				<tr>
+					<th>Descrição da receita</th>
+					<th>Descrição da despesa</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div data-saldo>Seu saldo atual = R$ 0,00</div>
+	<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+#despesas-receitas {
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-around;
+}
+
+.desaparecer {
+	display: none;
+}
+
+[data-saldo] {
+	margin-top: 10px;
+}
