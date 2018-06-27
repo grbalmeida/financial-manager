@@ -38,7 +38,6 @@
 
 	function validarValor() {
 		if(valor.value && descricao.value && Number(valor.value) > 0) {
-			const newValor = Number(valor.value)
 
 			switch(tipo.value) {
 				case 'despesa':
@@ -72,6 +71,7 @@
 	}
 
 	function criarElementos(pai) {
+		const fragment = document.createDocumentFragment()
 		const tdDescricao = document.createElement('td')
 		const tdDescricaoContent = document.createTextNode(descricao.value)
 		const tdValor = document.createElement('td')
@@ -87,9 +87,10 @@
 		tdApagarBtn.appendChild(tdApagarContent)
 		tdApagar.appendChild(tdApagarBtn)
 
-		tr.appendChild(tdDescricao)
-		tr.appendChild(tdValor)
-		tr.appendChild(tdApagar)
+		fragment.appendChild(tdDescricao)
+		fragment.appendChild(tdValor)
+		fragment.appendChild(tdApagar)
+		tr.appendChild(fragment)
 
 		pai.firstElementChild.firstElementChild.appendChild(tr)
 
