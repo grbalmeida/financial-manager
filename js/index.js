@@ -23,7 +23,7 @@
 		previnirTeclasNaoNumericas()
 	})
 
-	body.addEventListener('click', apagarTarefa)
+	body.addEventListener('click', apagarDespesaReceita)
 
 	function previnirAcaoPadrao() {
 		event.preventDefault()
@@ -59,43 +59,45 @@
 	}
 
 	function hidden() {
-		const qtdDespesas = despesas.querySelectorAll('tr').length
-		const qtdReceitas = receitas.querySelectorAll('tr').length
+		const qtdDespesas = getTrs(despesas).length
+		const qtdReceitas = getTrs(receitas).length
 		if(qtdReceitas > 1 || qtdDespesas > 1) {
-			despesas.classList.remove('desaparecer')
-			receitas.classList.remove('desaparecer')
+			remove(despesas, 'desaparecer')
+			remove(receitas, 'desaparecer')
 		} else {
-			despesas.classList.add('desaparecer')
-			receitas.classList.add('desaparecer')
+			add(despesas, 'desaparecer')
+			add(receitas, 'desaparecer')
 		}
 	}
 
 	function criarElementos(pai) {
 		const fragment = document.createDocumentFragment()
-		const tdDescricao = document.createElement('td')
-		const tdDescricaoContent = document.createTextNode(descricao.value)
-		const tdValor = document.createElement('td')
-		const tdValorContent = document.createTextNode(valor.value)
-		const tr = document.createElement('tr')
-		const tdApagar = document.createElement('td')
-		const tdApagarBtn = document.createElement('button')
-		const tdApagarContent = document.createTextNode('Apagar')
+		const tdDescricao = create('td')
+		const tdDescricaoContent = createText(descricao.value)
+		const tdValor = create('td')
+		const tdValorContent = createText(`R$ ${Number(valor.value).toFixed(2).replace('.', ',')}`)
+		const tr = create('tr')
+		const tdApagar = create('td')
+		const tdApagarBtn = create('button')
+		const tdApagarContent = createText('Apagar')
+		const data = create('td')
+		const dataContent = createText(getData())
 
-		tdDescricao.appendChild(tdDescricaoContent)
-		tdValor.appendChild(tdValorContent)
-		tdApagarBtn.classList.add('apagar')
-		tdApagarBtn.appendChild(tdApagarContent)
-		tdApagar.appendChild(tdApagarBtn)
+		append(tdDescricao, tdDescricaoContent)
+		append(tdValor, tdValorContent)
+		append(data, dataContent)
+		add(tdApagarBtn, 'apagar')
+		append(tdApagarBtn, tdApagarContent)
+		append(tdApagar, tdApagarBtn)
 
-		fragment.appendChild(tdDescricao)
-		fragment.appendChild(tdValor)
-		fragment.appendChild(tdApagar)
-		tr.appendChild(fragment)
-
-		pai.firstElementChild.firstElementChild.appendChild(tr)
+		append(fragment, tdDescricao)
+		append(fragment, tdValor)
+		append(fragment, data)
+		append(fragment, tdApagar)
+		append(tr, fragment)
+		append(pai.firstElementChild.firstElementChild, tr)
 
 		hidden()
-
 		limparCampos()
 		atualizaSaldo()
 	}
@@ -105,6 +107,7 @@
 	function limparCampos() {
 		descricao.value = ''
 		valor.value = ''
+		tipo.value = 'despesa'
 		descricao.focus()
 	}
 
@@ -116,10 +119,10 @@
 	}
 
 	function getValores(tipoGasto) {
-		const total = Array.from(tipoGasto.querySelectorAll('tr'))
+		const total = Array.from(getTrs(tipoGasto))
 						.filter((tr, indice) => indice != 0)
 						.map(elemento => elemento.firstElementChild.nextElementSibling)
-						.map(td => Number(td.textContent))
+						.map(td => Number(td.textContent.substring(3).replace(',', '.')))
 						.reduce(function(acumulado, atual = 0) {
 							return acumulado + atual
 						}, 0)
@@ -127,7 +130,7 @@
 		return total
 	}
 
-	function apagarTarefa(event) {
+	function apagarDespesaReceita(event) {
 		const btn = event.target
 		const tr = btn.parentNode.parentNode
 		const pai = tr.parentNode
@@ -138,6 +141,42 @@
 			hidden()
 		}
 
+	}
+
+	function getTrs(elemento) {
+		return elemento.querySelectorAll('tr')
+	}
+
+	function remove(elemento, classe) {
+		elemento.classList.remove(classe)
+	}
+
+	function add(elemento, classe) {
+		elemento.classList.add(classe)
+	}
+
+	function create(elemento) {
+		return document.createElement(elemento)
+	}
+
+	function append(elementoPai, elementoFilho) {
+		elementoPai.appendChild(elementoFilho)
+	}
+
+	function createText(texto) {
+		return document.createTextNode(texto)
+	}
+
+	function getData() {
+		const date = new Date()
+		const ano = date.getFullYear()
+		const mes = formataData(Number(date.getMonth()) + 1)
+		const dia = formataData(date.getDate())
+		return `${dia}/${mes}/${ano}`
+	}
+
+	function formataData(data) {
+		return data < 10 ? '0' + data : data
 	}
 
 })()
