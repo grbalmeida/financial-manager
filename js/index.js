@@ -104,29 +104,24 @@
 	}
 
 	function atualizaSaldo() {
-		const valorTotalDespesas = getValores(despesas)
-		const valorTotalReceitas = getValores(receitas)
-		const saldoAtual = valorTotalReceitas - valorTotalDespesas
+		const saldoAtual = getValores(receitas) - getValores(despesas)
 		saldo.textContent = `Saldo atual: R$${saldoAtual.toFixed(2).replace('.', ',')}`
 	}
 
 	function getValores(tipoGasto) {
-		const total = Array.from(getTrs(tipoGasto))
-						.filter((tr, indice) => indice != 0)
-						.map(elemento => elemento.firstElementChild.nextElementSibling)
-						.map(td => Number(td.textContent.substring(3).replace(',', '.')))
-						.reduce((acumulado, atual = 0) => acumulado + atual, 0)
-
-		return total
+		return Array.from(getTrs(tipoGasto))
+					.filter((tr, indice) => indice != 0)
+					.map(elemento => elemento.firstElementChild.nextElementSibling)
+					.map(td => Number(td.textContent.substring(3).replace(',', '.')))
+					.reduce((acumulado, atual = 0) => acumulado + atual, 0)
 	}
 
 	function apagarDespesaReceita(event) {
 		const btn = event.target
 		const tr = btn.parentNode.parentNode
-		const pai = tr.parentNode
 
 		if(btn.classList.contains('apagar')) {
-			pai.removeChild(tr)
+			tr.parentNode.removeChild(tr)
 			atualizaSaldo()
 			hidden()
 		}
