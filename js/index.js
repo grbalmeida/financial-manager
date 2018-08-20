@@ -41,21 +41,13 @@
 
 			switch(tipo.value) {
 				case 'despesa':
-					adicionarDespesa()
+					criarElementos(despesas)
 					break
 				case 'receita':
-					adicionarReceita()
+					criarElementos(receitas)
 					break
 			}
 		}
-	}
-
-	function adicionarDespesa() {
-		criarElementos(despesas)
-	}
-
-	function adicionarReceita() {
-		criarElementos(receitas)
 	}
 
 	function hidden() {
@@ -155,17 +147,13 @@
 		elemento.classList.add(classe)
 	}
 
-	function create(elemento) {
-		return document.createElement(elemento)
-	}
+	const create = elemento => document.createElement(elemento)
 
 	function append(elementoPai, elementoFilho) {
 		elementoPai.appendChild(elementoFilho)
 	}
 
-	function createText(texto) {
-		return document.createTextNode(texto)
-	}
+	const createText = texto => document.createTextNode(texto)
 
 	function getData() {
 		const date = new Date()
@@ -175,8 +163,6 @@
 		return `${dia}/${mes}/${ano}`
 	}
 
-	function formataData(data) {
-		return data < 10 ? '0' + data : data
-	}
+	const formataData = data => data < 10 ? `0${data}` : data
 
 })()
