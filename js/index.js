@@ -115,9 +115,7 @@
 						.filter((tr, indice) => indice != 0)
 						.map(elemento => elemento.firstElementChild.nextElementSibling)
 						.map(td => Number(td.textContent.substring(3).replace(',', '.')))
-						.reduce(function(acumulado, atual = 0) {
-							return acumulado + atual
-						}, 0)
+						.reduce((acumulado, atual = 0) => acumulado + atual, 0)
 
 		return total
 	}
@@ -148,12 +146,9 @@
 	}
 
 	const create = elemento => document.createElement(elemento)
-
-	function append(elementoPai, elementoFilho) {
-		elementoPai.appendChild(elementoFilho)
-	}
-
+	const formataData = data => data < 10 ? `0${data}` : data
 	const createText = texto => document.createTextNode(texto)
+	const append = (elementoPai, elementoFilho) => elementoPai.appendChild(elementoFilho)
 
 	function getData() {
 		const date = new Date()
@@ -163,6 +158,5 @@
 		return `${dia}/${mes}/${ano}`
 	}
 
-	const formataData = data => data < 10 ? `0${data}` : data
 
 })()
