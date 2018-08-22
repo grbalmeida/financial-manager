@@ -75,17 +75,14 @@
 		const tdApagarBtn = criarTagComConteudo('button', 'Apagar')
 		const tdValor = criarTagComConteudo('td', `R$ ${formatNumber(Number(valor.value))}`)
 		const data = criarTagComConteudo('td', getData())
-
+		const tdDescricao = criarTagComConteudo('td', descricao.value)
 		const tr = create('tr')
 		const tdApagar = create('td')
 
 		add(tdApagarBtn, 'apagar')
 
 		append(tdApagar, tdApagarBtn)
-		append(fragment, criarTagComConteudo('td', descricao.value))
-		append(fragment, tdValor)
-		append(fragment, data)
-		append(fragment, tdApagar)
+		appendFragment(fragment, tdDescricao, tdValor, data, tdApagar)
 		append(tr, fragment)
 		append(pai.firstElementChild.firstElementChild, tr)
 
@@ -140,6 +137,12 @@
 		const mes = formataData(Number(date.getMonth()) + 1)
 		const dia = formataData(date.getDate())
 		return `${dia}/${mes}/${ano}`
+	}
+
+	function appendFragment(fragmento, ...params) {
+		params.forEach(param => {
+			append(fragmento, param)
+		})
 	}
 
 })()
