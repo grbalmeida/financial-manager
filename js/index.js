@@ -12,8 +12,19 @@
 	const saldo = document.querySelector('[data-saldo]')
 	const body = document.querySelector('body')
 
+	const getTrsLength = tr => getTrs(tr).length
+	const getTrs = elemento => elemento.querySelectorAll('tr')
+	const remove = (elemento, classe) => elemento.classList.remove(classe)
+	const add = (elemento, classe) => elemento.classList.add(classe)
+	const formatNumber = number => number.toFixed(2).replace('.', ',')
+	const create = elemento => document.createElement(elemento)
+	const formataData = data => data < 10 ? `0${data}` : data
+	const createText = texto => document.createTextNode(texto)
+	const append = (elementoPai, elementoFilho) => elementoPai.appendChild(elementoFilho)
+
 	btn.addEventListener('click', previnirAcaoPadrao)
 	btn.addEventListener('click', validarValor)
+	body.addEventListener('click', apagarDespesaReceita)
 
 	valor.addEventListener('keydown', function(event) {
 		if(event.keyCode == 13) {
@@ -22,8 +33,6 @@
 		}
 		previnirTeclasNaoNumericas()
 	})
-
-	body.addEventListener('click', apagarDespesaReceita)
 
 	function previnirAcaoPadrao() {
 		event.preventDefault()
@@ -51,9 +60,7 @@
 	}
 
 	function hidden() {
-		const qtdDespesas = getTrs(despesas).length
-		const qtdReceitas = getTrs(receitas).length
-		if(qtdReceitas > 1 || qtdDespesas > 1) {
+		if(getTrsLength(receitas) > 1 || getTrsLength(despesas) > 1) {
 			remove(despesas, 'desaparecer')
 			remove(receitas, 'desaparecer')
 		} else {
@@ -64,25 +71,18 @@
 
 	function criarElementos(pai) {
 		const fragment = document.createDocumentFragment()
-		const tdDescricao = create('td')
-		const tdDescricaoContent = createText(descricao.value)
-		const tdValor = create('td')
-		const tdValorContent = createText(`R$ ${Number(valor.value).toFixed(2).replace('.', ',')}`)
+
+		const tdApagarBtn = criarTagComConteudo('button', 'Apagar')
+		const tdValor = criarTagComConteudo('td', `R$ ${formatNumber(Number(valor.value))}`)
+		const data = criarTagComConteudo('td', getData())
+
 		const tr = create('tr')
 		const tdApagar = create('td')
-		const tdApagarBtn = create('button')
-		const tdApagarContent = createText('Apagar')
-		const data = create('td')
-		const dataContent = createText(getData())
 
-		append(tdDescricao, tdDescricaoContent)
-		append(tdValor, tdValorContent)
-		append(data, dataContent)
 		add(tdApagarBtn, 'apagar')
-		append(tdApagarBtn, tdApagarContent)
-		append(tdApagar, tdApagarBtn)
 
-		append(fragment, tdDescricao)
+		append(tdApagar, tdApagarBtn)
+		append(fragment, criarTagComConteudo('td', descricao.value))
 		append(fragment, tdValor)
 		append(fragment, data)
 		append(fragment, tdApagar)
@@ -96,6 +96,12 @@
 
 	hidden()
 
+	function criarTagComConteudo(tag, conteudo) {
+		const newTag = create(tag)
+		newTag.appendChild(createText(conteudo))
+		return newTag
+	}
+
 	function limparCampos() {
 		descricao.value = ''
 		valor.value = ''
@@ -105,7 +111,7 @@
 
 	function atualizaSaldo() {
 		const saldoAtual = getValores(receitas) - getValores(despesas)
-		saldo.textContent = `Saldo atual: R$${saldoAtual.toFixed(2).replace('.', ',')}`
+		saldo.textContent = `Saldo atual: R$${formatNumber(saldoAtual)}`
 	}
 
 	function getValores(tipoGasto) {
@@ -128,23 +134,6 @@
 
 	}
 
-	function getTrs(elemento) {
-		return elemento.querySelectorAll('tr')
-	}
-
-	function remove(elemento, classe) {
-		elemento.classList.remove(classe)
-	}
-
-	function add(elemento, classe) {
-		elemento.classList.add(classe)
-	}
-
-	const create = elemento => document.createElement(elemento)
-	const formataData = data => data < 10 ? `0${data}` : data
-	const createText = texto => document.createTextNode(texto)
-	const append = (elementoPai, elementoFilho) => elementoPai.appendChild(elementoFilho)
-
 	function getData() {
 		const date = new Date()
 		const ano = date.getFullYear()
@@ -152,6 +141,5 @@
 		const dia = formataData(date.getDate())
 		return `${dia}/${mes}/${ano}`
 	}
-
 
 })()
